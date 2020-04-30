@@ -1,0 +1,31 @@
+version: "2.1"
+
+services:
+
+  stock-recording:
+    container_name: stock-recording
+    image: stock-recording:$VERSION_STOCK_RECORDING
+    networks:
+      - mysqlnet
+      - stocknet
+    ports:
+      - "3000:3000/tcp"
+    expose: 
+      - "3000/tcp"
+    environment:
+      FLASK_APP: api.py
+      #FLASK_ENV: development
+      FLASK_ENV: production
+      FLASK_RUN_HOST: "0.0.0.0"
+      FLASK_RUN_PORT: 3000
+    volumes:
+      - /mnt/volumes/stock-recording/data/migrations:/root/migrations:z
+      - ${RUN_DIRECTORY}/conf.yml:/root/conf.yml
+
+networks:
+
+  mysqlnet:
+    external: true
+
+  stocknet:
+    external: true
